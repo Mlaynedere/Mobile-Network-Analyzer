@@ -91,4 +91,4 @@ def success(name):
         return 'Welcome, %s!' % name
     else:
          return redirect(url_for('login'))  # Redirect to login if user is not logged in
-app.run(debug = True)
+app.run(host="0.0.0.0", debug = True)
