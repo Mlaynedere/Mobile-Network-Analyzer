@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-44y4PYFaig5heAERuTVFB4M9sgp7WpUOJ8yPL17HKUxVzP0fF7F7XToHc4eS9eFbnB4rIJg2k0K0P9rrfr77iA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,6 +24,7 @@
         }
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
         label {
             display: block;
@@ -31,30 +33,34 @@
         }
         input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: calc(100% - 40px);
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
+        .toggle-password {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 5px;
             cursor: pointer;
+        }
+        .password-policy {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
         }
         .error-message {
             color: red;
-            margin-top: 10px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Register</h2>
-        <form action="/register" method="post">
+        <form action="/register" method="post" id="register-form">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -62,9 +68,77 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+                <span class="toggle-password" id="toggle-password">
+                    <i class="far fa-eye-slash" id="eye-icon"></i>
+                </span>
+                <p class="password-policy">Password must meet the following criteria:</p>
+                <ul class="password-policy">
+                    <li id="length">At least 8 characters long</li>
+                    <li id="numbers">At least 2 numbers</li>
+                    <li id="capital">At least one capital letter</li>
+                    <li id="special">At least one special character</li>
+                </ul>
+                <p class="error-message" id="password-error"></p>
             </div>
             <input type="submit" value="Register">
         </form>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-n11vDQ6m9uQRrv3xhMkXQkF70DzvL/NyHfi9n2V0kSZ1Of6oCc4jyF9kbp8b56FvK8M7Jo5JEMUEtALjeOkl8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            var passwordField = document.getElementById('password');
+            var eyeIcon = document.getElementById('eye-icon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.remove('far', 'fa-eye-slash');
+                eyeIcon.classList.add('fas', 'fa-eye');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.remove('fas', 'fa-eye');
+                eyeIcon.classList.add('far', 'fa-eye-slash');
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            var password = document.getElementById('password').value;
+            var passwordError = document.getElementById('password-error');
+            var valid = true;
+
+            if (password.length < 8) {
+                document.getElementById('length').style.color = 'red';
+                valid = false;
+            } else {
+                document.getElementById('length').style.color = 'inherit';
+            }
+
+            if (!/\d/.test(password) || (password.match(/\d/g) || []).length < 2) {
+                document.getElementById('numbers').style.color = 'red';
+                valid = false;
+            } else {
+                document.getElementById('numbers').style.color = 'inherit';
+            }
+
+            if (!/[A-Z]/.test(password)) {
+                document.getElementById('capital').style.color = 'red';
+                valid = false;
+            } else {
+                document.getElementById('capital').style.color = 'inherit';
+            }
+
+            if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+                document.getElementById('special').style.color = 'red';
+                valid = false;
+            } else {
+                document.getElementById('special').style.color = 'inherit';
+            }
+
+            if (!valid) {
+                passwordError.textContent = 'Password must meet the requirements.';
+                event.preventDefault(); // Prevent form submission
+            } else {
+                passwordError.textContent = ''; // Clear error message if password is valid
+            }
+        });
+    </script>
 </body>
 </html>
