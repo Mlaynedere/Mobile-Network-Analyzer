@@ -86,7 +86,7 @@ public class CaptureSnapshot {
             }
         }
     }
-    //THIS IS THE INTERESTING FUNCTION TO CALL OUTSIDE to obtain all the data
+    
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String[] generateSnapshot() {
         CellInfoUpdator cellInfoUpdator = new CellInfoUpdator(telephonyManager);
@@ -109,7 +109,7 @@ public class CaptureSnapshot {
     @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.N)
 
-    //returns network type, either 2g or 3g or 4g
+    //Returns Network Type: 2G/3G/4G
     public String networkType() {
         try {
             switch (telephonyManager.getDataNetworkType()) {
@@ -140,7 +140,7 @@ public class CaptureSnapshot {
         }
     }
 
-    //returns cell identity details in function of what networkType() returned
+    //Returns Cell ID Details
     public String getCellId() {
         try {
             switch (networkType) {
@@ -197,7 +197,7 @@ public class CaptureSnapshot {
         }
     }
 
-    //timeStamp
+    //Time Stamp
     public String getTimeStamp() {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm:ss aa");
@@ -221,7 +221,7 @@ public class CaptureSnapshot {
     }
 
 
-    //power in dbm for 2g 3g 4g
+    //Power in dBm for 2G/3G/4G
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public String getPower() {
         CellInfoUpdator cellInfoUpdator = new CellInfoUpdator(telephonyManager);
